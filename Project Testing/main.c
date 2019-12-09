@@ -36,12 +36,14 @@ void choose_grid()
     //Sending the parameters for row number, column number, array location, and char c which indicates
     //The size of the grid that the user chose.
     int arr[rownum][colnum];
-    create_grid(rownum,colnum,arr,c);
+    int vals[rownum][colnum];
+    create_grid(rownum,colnum,arr,c,vals);
 }
 
-void create_grid(int y, int x, char arr[y][x],char c)
+void create_grid(int y, int x, char arr[y][x],char c,int vals[y][x])
 {
-    int i,j;
+    int i,j,player=1,play=0;
+
     //254 is the ASCII code for the dots used in the interface
     //49 is the ASCII code for the number '1' to be used to write down indexes for rows and columns
     //To show the coordinates of each dot in the grid
@@ -57,10 +59,12 @@ void create_grid(int y, int x, char arr[y][x],char c)
                 if (j%6==1)
                 {
                     arr[i][j]=gridindexrow++;
+                    vals[i][j]=0;
                 }
                 else
                 {
                     arr[i][j]=' ';
+                    vals[i][j]=0;
                 }
             }
             else if (j==0)
@@ -68,10 +72,12 @@ void create_grid(int y, int x, char arr[y][x],char c)
                 if (i%3==1)
                 {
                     arr[i][j]=gridindexcol++;
+                    vals[i][j]=0;
                 }
                 else
                 {
                     arr[i][j]=' ';
+                    vals[i][j]=0;
                 }
             }
             else if(i%3==1)
@@ -79,15 +85,18 @@ void create_grid(int y, int x, char arr[y][x],char c)
                 if (j%6==1)
                 {
                     arr[i][j]=point;
+                    vals[i][j]=9;
                 }
                 else
                 {
                     arr[i][j]=' ';
+                    vals[i][j]=0;
                 }
             }
             else
             {
                 arr[i][j]=' ';
+                vals[i][j]=0;
             }
         }
 
@@ -135,11 +144,13 @@ void create_grid(int y, int x, char arr[y][x],char c)
     //location and char 'c' which indicates the size of the grid that the user chose.
     while(1)
     {
-        join_grid(y,x,arr,c);
+        player=-player;
+        play=0;
+        join_grid(y,x,arr,c,player,vals,play);
     }
 }
 
-void join_grid(int y, int x, char arr[y][x],char t)
+void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x],int play)
 {
     int i,j,a,b,c,d,rowdiff,coldiff,p1x,p1y,p2x,p2y;
     int lastindex;
@@ -161,6 +172,7 @@ void join_grid(int y, int x, char arr[y][x],char t)
     //so we subtract 48 to get 1 then store in integer a.
     //This is done to avoid crashing the program if (scanf) was used to scan an integer and the user entered
     //a character that is not numeric.
+    do{
     printf("\nPlease enter the required points:");
     scanf(" %c",&aa);
     scanf(" %c",&bb);
@@ -205,6 +217,8 @@ void join_grid(int y, int x, char arr[y][x],char t)
                     for (i=p1x+2; i<p2x-1; i++)
                     {
                         arr[p1y][i]=rowline;
+                        vals[p1y][i]=player;
+                        play=1;
                     }
                 }
                 else
@@ -240,6 +254,8 @@ void join_grid(int y, int x, char arr[y][x],char t)
                     for (i=p1y+1; i<p2y; i++)
                     {
                         arr[i][p1x]=colline;
+                        vals[i][p1x]=player;
+                        play=1;
                     }
                 }
                 else
@@ -291,6 +307,21 @@ void join_grid(int y, int x, char arr[y][x],char t)
                     printf("%c",arr[i][j]);
                 }
             }
+            else if (i!=0&&j!=0&&(i%3!=1||j%6!=1))
+            {
+                if(vals[i][j]==1)
+                    {
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),1);
+                printf("%c",arr[i][j]);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                }
+                else
+                {
+                  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
+                printf("%c",arr[i][j]);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                }
+            }
             else
             {
                 printf("%c",arr[i][j]);
@@ -298,6 +329,7 @@ void join_grid(int y, int x, char arr[y][x],char t)
         }
         printf("\n");
     }
+}while(play==0);
 }
 
 int main()
