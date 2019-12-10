@@ -6,7 +6,7 @@
 
 
 int boxmax,boxcompall,boxcomp,countstep1,countstep2,countboxcom1,countboxcom2,play;
-char nameA[100],nameB[100];
+char nameA[100],nameB[100],garbage[100],block=219,rowline=196,colline=179;
 
 void main_menu()
 {
@@ -18,6 +18,7 @@ void main_menu()
     printf("3:Load Game\n");
     printf("4:Scoreboard\n");
     scanf("%c",&mmc);
+    gets(garbage);
     switch (mmc)
     {
     case '1':
@@ -207,7 +208,7 @@ void join_grid(int y, int x, char arr[y][x],char t,int vals[y][x],int player,cha
     /*boxcomp=0;*/
     //196 and 179 are the ASCII codes for the characters used to draw lines in the game horizontally
     //or vertically respectively
-    char rowline = 196, colline = 179, aa, bb, cc, dd;
+    char aa, bb, cc, dd;
     //If the user chose 'b' then the largest row and column value for a dot is 3,3
     //If the user chose 'b' then the largest row and column value for a dot is 6,6
     if (t=='b')
@@ -246,6 +247,7 @@ void join_grid(int y, int x, char arr[y][x],char t,int vals[y][x],int player,cha
         scanf(" %c",&bb);
         scanf(" %c",&cc);
         scanf(" %c",&dd);
+        gets(garbage);
         a = aa-48, b = bb-48;
         c = cc-48;
         d = dd-48;
@@ -388,30 +390,54 @@ void join_grid(int y, int x, char arr[y][x],char t,int vals[y][x],int player,cha
                             if(vals[i+1][j]==1)
                             {
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
-                                arr[i][j]=nameA[0];
+                                arr[i][j]=block;
                                 printf("%c",arr[i][j]);
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
                             }
                             else if (vals[i+1][j]==-1)
                             {
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
-                                arr[i][j]=nameB[0];
+                                for(int k=i; k<i+2; k++)
+                                {
+                                    for(int l=j-2; l<j+3; l++)
+                                        arr[i][j]=block;
+                                }
                                 printf("%c",arr[i][j]);
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
                             }
                         }
-                        else if (vals[i][j]==1)
+                        else if (vals[i][j]==1&& (i%3!=2||j%6!=4))
                         {
-                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
-                            printf("%c",arr[i][j]);
-                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            if((i%3==1||j%6==1))
+                            {
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
+                                printf("%c",arr[i][j]);
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            }
+                            else
+                            {
+                                arr[i][j]=block;
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
+                                printf("%c",arr[i][j]);
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            }
                         }
 
-                        else if (vals[i][j]==-1)
+                        else if (vals[i][j]==-1&& (i%3!=2||j%6!=4))
                         {
-                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
-                            printf("%c",arr[i][j]);
-                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            if((i%3==1||j%6==1))
+                            {
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
+                                printf("%c",arr[i][j]);
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            }
+                            else
+                            {
+                                arr[i][j]=block;
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
+                                printf("%c",arr[i][j]);
+                                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+                            }
                         }
                         else
                         {
@@ -456,7 +482,14 @@ void check_box(int y, int x,int player,int vals[y][x])
             if (vals[i][j]==4&&vals[i+1][j]==0)
             {
                 boxcomp++;
-                vals[i+1][j]=player;
+                for(int k=i-1;k<i+3;k++)
+                {
+                    for(int l=j-3;l<j+4;l++)
+                    {
+                        if(vals[k][l]!=9&&vals[k][l]!=4)
+                            vals[k][l]=player;
+                    }
+                }
                 if(player==1)
                     countboxcom1++;
                 else if (player==-1)
@@ -479,9 +512,9 @@ int end_check()
 void winner()
 {
     if(countboxcom1>countboxcom2)
-        printf("The winner is Player A");
+        printf("The winner is %s",nameA);
     else if (countboxcom2>countboxcom1)
-        printf("The winner is Player B");
+        printf("The winner is %s",nameB);
     else
         printf("Draw");
 }
