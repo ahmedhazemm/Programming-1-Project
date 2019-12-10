@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1575974966 source:c:\codeblocks\testprojectglobal\main.c
+1575982919 source:c:\codeblocks\testprojectglobal\main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>

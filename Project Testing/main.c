@@ -3,8 +3,40 @@
 #include <ctype.h>
 #include <windows.h>
 #include <math.h>
-int boxmax,boxcompall,boxcomp,countstep1,countstep2,countboxcom1,countboxcom2,end,play;
 
+
+int boxmax,boxcompall,boxcomp,countstep1,countstep2,countboxcom1,countboxcom2,play;
+char nameA[100],nameB[100];
+
+void main_menu()
+{
+    clrscr();
+    printf("Welcome to Dots and Boxes\n\n\n");
+    char mmc;
+    printf("1:Single Player\n");
+    printf("2:Multi player\n");
+    printf("3:Load Game\n");
+    printf("4:Scoreboard\n");
+    scanf("%c",&mmc);
+    switch (mmc)
+    {
+    case '1':
+
+        break;
+    case '2':
+        choose_grid();
+        break;
+    case '3':
+
+        break;
+    case '4':
+
+        break;
+    default :
+        main_menu();
+    }
+
+}
 
 void choose_grid()
 {
@@ -13,14 +45,17 @@ void choose_grid()
     //If user enters any other input then display an error message and ask for input again
     do
     {
-        printf("Please select either Beginner (b)(2x2) or Expert (e)(5x5)\n");
+        clrscr();
+        printf("Please enter (b) for Beginner, (e) for Expert or (m) for Main Menu\n");
         scanf(" %c",&c);
-        if (c!='b' && c!='e')
+        if (c!='b' && c!='e' && c!='m')
         {
             printf("Error: incorrect input format\n");
         }
+        if (c=='m')
+            main_menu();
     }
-    while(c!='b' && c!='e');
+    while(c!='b' && c!='e' && c!='m');
     //Initialize the number of rows and columns in the 2D array that holds the game interface
     //Then determining the exact values depending on the users choice
     int rownum=0,colnum=0;
@@ -41,10 +76,13 @@ void choose_grid()
     //The size of the grid that the user chose.
     int arr[rownum][colnum];
     int vals[rownum][colnum];
-    create_grid(rownum,colnum,arr,c,vals);
+    clrscr();
+    scan_player_name(nameA,nameB);
+    clrscr();
+    create_grid(rownum,colnum,arr,c,vals,nameA,nameB);
 }
 
-void create_grid(int y, int x, char arr[y][x],char c,int vals[y][x])
+void create_grid(int y, int x, char arr[y][x],char c,int vals[y][x],char nameA[100],char nameB[100])
 {
     int i,j,player=-1,play=0;
     boxcompall=0;
@@ -52,7 +90,6 @@ void create_grid(int y, int x, char arr[y][x],char c,int vals[y][x])
     countboxcom2=0;
     countstep1=0;
     countstep2=0;
-    end=0;
 
     //254 is the ASCII code for the dots used in the interface
     //49 is the ASCII code for the number '1' to be used to write down indexes for rows and columns
@@ -150,18 +187,20 @@ void create_grid(int y, int x, char arr[y][x],char c,int vals[y][x])
         }
         printf("\n");
     }
+    printf("\nScore:\t%s:\t%d\t%s:\t%d\n",nameA,countboxcom1,nameB,countboxcom2);
+    printf("Steps:\t%s:\t%d\t%s:\t%d\n",nameA,countstep1,nameB,countstep2);
     // Call the function 'join_grid' while sending it the parameters for row number(y), column number(x), array
     //location and char 'c' which indicates the size of the grid that the user chose.
     do
     {
         player=-player;
-        join_grid(y,x,arr,c,player,vals);
+        join_grid(y,x,arr,c,vals,player,nameA,nameB);
     }
     while(!end_check());
     winner();
 }
 
-void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x])
+void join_grid(int y, int x, char arr[y][x],char t,int vals[y][x],int player,char nameA[100],char nameB[100])
 {
     int i,j,a,b,c,d,rowdiff,coldiff,p1x,p1y,p2x,p2y;
     int lastindex;
@@ -187,6 +226,21 @@ void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x])
     do
     {
         play=0;
+        if (player==1)
+        {
+            printf("\nTurn:\t");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
+            printf("%s\n",nameA);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+        }
+        else
+        {
+            printf("\nTurn:\t");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
+            printf("%s\n",nameB);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+        }
+
         printf("\nPlease enter the required points:");
         scanf(" %c",&aa);
         scanf(" %c",&bb);
@@ -295,6 +349,7 @@ void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x])
         // Print the grid on screen after a line is drawn or an error occurred
         if(play==1)
         {
+            clrscr();
             for (i=0; i<y; i++)
             {
                 for (j=0; j<x; j++)
@@ -333,14 +388,14 @@ void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x])
                             if(vals[i+1][j]==1)
                             {
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),2);
-                                arr[i][j]='A';
+                                arr[i][j]=nameA[0];
                                 printf("%c",arr[i][j]);
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
                             }
                             else if (vals[i+1][j]==-1)
                             {
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),4);
-                                arr[i][j]='B';
+                                arr[i][j]=nameB[0];
                                 printf("%c",arr[i][j]);
                                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
                             }
@@ -381,8 +436,8 @@ void join_grid(int y, int x, char arr[y][x],char t,int player,int vals[y][x])
                     countstep2++;
                 }
             }
-            printf("\nScore:\tPlayer A:\t%d\tPlayer B:\t%d\n",countboxcom1,countboxcom2);
-            printf("Steps:\tPlayer A:\t%d\t\Player B:\t%d\n",countstep1,countstep2);
+            printf("\nScore:\t%s:\t%d\t%s:\t%d\n",nameA,countboxcom1,nameB,countboxcom2);
+            printf("Steps:\t%s:\t%d\t\%s:\t%d\n",nameA,countstep1,nameB,countstep2);
         }
     }
     while((play==0||boxcomp!=0)&&!end_check());
@@ -414,15 +469,13 @@ void check_box(int y, int x,int player,int vals[y][x])
 
 int end_check()
 {
-    int flag;
     if(boxcompall==boxmax)
-        flag=1;
+        return 1;
     else
-        flag=0;
-    return flag;
-
+        return 0;
 }
 
+//This function
 void winner()
 {
     if(countboxcom1>countboxcom2)
@@ -433,11 +486,26 @@ void winner()
         printf("Draw");
 }
 
+void clrscr()
+{
+    system("@cls||clear");
+}
+
+void scan_player_name(char nameA[100],char nameB[100])
+{
+    printf("Please enter Player A name:");
+    fgets(nameA,100,stdin);
+    fgets(nameA,100,stdin);
+    nameA[strlen(nameA)-1]=0;
+    printf("\nPlease enter Player B name:");
+    fgets(nameB,100,stdin);
+    nameB[strlen(nameB)-1]=0;
+}
 
 int main()
 {
     //Call the 'choose_grid' function which starts the game
-    choose_grid();
+    main_menu();
 
 
     return 0;
