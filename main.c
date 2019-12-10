@@ -247,8 +247,6 @@ void join_grid(int y, int x, char arr[y][x],char t,int vals[y][x],int player,cha
     int i,j,a,b,c,d,rowdiff,coldiff,p1x,p1y,p2x,p2y;
     int lastindex;
 
-    /*boxcomp=0;*/
-
     //196 and 179 are the ASCII codes for the characters used to draw lines in the game horizontally
     //or vertically respectively.
     char rowline = 196, colline = 179, aa, bb, cc, dd;
@@ -562,8 +560,8 @@ int end_check()
 
 void winner()
 {
-    //If th number of boxes completed by player 1 is greater than the number of boxes completed by player 2, display that the winner is player 1.
-    //If th number of boxes completed by player 2 is greater than the number of boxes completed by player 1, display that the winner is player 2.
+    //If the number of boxes completed by player 1 is greater than the number of boxes completed by player 2, display that the winner is player 1.
+    //If the number of boxes completed by player 2 is greater than the number of boxes completed by player 1, display that the winner is player 2.
     //Otherwise, display that the game ended in a draw.
     if(countboxcom1>countboxcom2)
         printf("The winner is Player A");
