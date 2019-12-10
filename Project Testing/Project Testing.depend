@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1575914885 source:c:\users\samah\desktop\university\programming\project testing\main.c
+1575974966 source:c:\codeblocks\testprojectglobal\main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
 	<windows.h>
+	<math.h>
 
