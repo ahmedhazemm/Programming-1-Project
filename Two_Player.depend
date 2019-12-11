@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1576094481 source:c:\users\admin\desktop\two_player\main.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+
